@@ -6,6 +6,8 @@ public class TResult<T> {
     private String message;
     private T data;
 
+    public static TResult OK = new TResult<>(200,"success");
+
     public TResult() {
     }
 
