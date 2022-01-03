@@ -32,6 +32,9 @@ public class AuthUserCache<V> {
     }
 
     public V getLoginUser(String accessToken) {
+        if(!accessToken.startsWith("session:")){
+            accessToken = "session:" + accessToken;
+        }
         TimeEntity<V> timeEntity = CACHE.getIfPresent(accessToken);
         if (timeEntity == null || timeEntity.getTimeOut() < System.currentTimeMillis()) {
             RBucket<V> bucket = redissonClient.getBucket(accessToken);
@@ -49,6 +52,9 @@ public class AuthUserCache<V> {
     }
 
     public void setLoginUser(String accessToken, V v) {
+        if(!accessToken.startsWith("session:")){
+            accessToken = "session:" + accessToken;
+        }
         CACHE.put(accessToken, new TimeEntity<>(v, System.currentTimeMillis() + securityConfig.getSessionTimeOut()));
         RBucket<V> bucket = redissonClient.getBucket(accessToken);
         bucket.set(v, securityConfig.getSessionTimeOut(), TimeUnit.MILLISECONDS);
@@ -68,6 +74,9 @@ public class AuthUserCache<V> {
     }
 
     public void logout(String accessToken) {
+        if(!accessToken.startsWith("session:")){
+            accessToken = "session:" + accessToken;
+        }
         CACHE.invalidate(accessToken);
         redissonClient.<V>getBucket(accessToken).deleteAsync();
         logger.debug("logout success,accessToken:{}", accessToken);
@@ -78,6 +87,9 @@ public class AuthUserCache<V> {
     }
 
     public void autoRefresh(String accessToken, Long remainTimeToLive) {
+        if(!accessToken.startsWith("session:")){
+            accessToken = "session:" + accessToken;
+        }
         if (securityConfig.isAutoRefresh()) {
             if (remainTimeToLive < securityConfig.getSessionTimeOut() / 5) {
                 addTime(accessToken);
@@ -86,6 +98,9 @@ public class AuthUserCache<V> {
     }
 
     public void addTime(String accessToken) {
+        if(!accessToken.startsWith("session:")){
+            accessToken = "session:" + accessToken;
+        }
         CACHE.invalidate(accessToken);
         redissonClient.<V>getBucket(accessToken).expire(securityConfig.getSessionTimeOut(), TimeUnit.MILLISECONDS);
     }
