@@ -16,8 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 
-@Component
-@ConditionalOnBean(RedissonClient.class)
+
 public class AuthUserCache<V> {
     private final Logger logger = LoggerFactory.getLogger(AuthUserCache.class);
     private final RedissonClient redissonClient;

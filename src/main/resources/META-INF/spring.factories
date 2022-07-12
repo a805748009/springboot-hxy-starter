@@ -1,5 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.hxy.springboot.starter.auth.SecurityConfig,\
-  com.hxy.springboot.starter.auth.cache.AuthUserCache,\
   com.hxy.springboot.starter.SpringContextHolder
 
